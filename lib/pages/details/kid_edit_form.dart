@@ -40,7 +40,7 @@ class _KidEditFormState extends State<KidEditForm> {
     return kidDocument.data() as Map<String, dynamic>;
   }
 
-  void _showModalBottomSheet(BuildContext context) {
+  void _showModalBottomSheet(BuildContext context, String message) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -50,12 +50,11 @@ class _KidEditFormState extends State<KidEditForm> {
       ),
       context: context,
       builder: (BuildContext context) {
-        // Display the modal bottom sheet content
         return Container(
           height: 100,
           child: Center(
             child: Text(
-              "Berhasil diubah",
+              message,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -66,7 +65,6 @@ class _KidEditFormState extends State<KidEditForm> {
       },
     );
 
-    // Close the modal bottom sheet after 1 second
     Future.delayed(Duration(milliseconds: 1000), () {
       Navigator.of(context).pop();
     });
@@ -142,6 +140,7 @@ class _KidEditFormState extends State<KidEditForm> {
                               children: [
                                 SizedBox(height: paddingMin),
                                 InputKids(
+                                  maxLength: 25,
                                   docId: widget.docId,
                                   text: "Nama Lengkap",
                                   hintText: name,
@@ -150,14 +149,17 @@ class _KidEditFormState extends State<KidEditForm> {
                                 ),
                                 SizedBox(height: paddingMin),
                                 InputKids(
+                                  maxLength: 16,
                                   docId: widget.docId,
                                   text: "NIK",
                                   hintText: nik,
+                                  isNumeric: true,
                                   controller:
                                       textNikController, // Set hintText from the data
                                 ),
                                 SizedBox(height: paddingMin),
                                 InputKids(
+                                  maxLength: 15,
                                   docId: widget.docId,
                                   text: "Jenis Kelamin",
                                   hintText:
@@ -167,6 +169,7 @@ class _KidEditFormState extends State<KidEditForm> {
                                 ),
                                 SizedBox(height: paddingMin),
                                 InputKids(
+                                  maxLength: 20,
                                   docId: widget.docId,
                                   text: "Tempat lahir",
                                   hintText:
@@ -227,23 +230,35 @@ class _KidEditFormState extends State<KidEditForm> {
                                 ButtonKids(
                                   text: "Ubah data",
                                   onTap: () async {
-                                    await firestoreService.updateKid(
-                                      widget.docId,
-                                      textNameController.text,
-                                      textNikController.text,
-                                      textGenderController.text,
-                                      textPlaceBirthController.text,
-                                      formattedDate,
-                                      textHeightController.text,
-                                      textWeightController.text,
-                                    );
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => FirstPage(),
-                                      ),
-                                    );
-                                    _showModalBottomSheet(context);
+                                    if (textNameController.text.isEmpty ||
+                                        textNikController.text.isEmpty ||
+                                        textGenderController.text.isEmpty ||
+                                        textPlaceBirthController.text.isEmpty ||
+                                        formattedDate.isEmpty ||
+                                        textHeightController.text.isEmpty ||
+                                        textWeightController.text.isEmpty) {
+                                      _showModalBottomSheet(
+                                          context, "Semua input harus diisi");
+                                    } else {
+                                      await firestoreService.updateKid(
+                                        widget.docId,
+                                        textNameController.text,
+                                        textNikController.text,
+                                        textGenderController.text,
+                                        textPlaceBirthController.text,
+                                        formattedDate,
+                                        textHeightController.text,
+                                        textWeightController.text,
+                                      );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => FirstPage(),
+                                        ),
+                                      );
+                                      _showModalBottomSheet(
+                                          context, "Berhasil diubah");
+                                    }
                                   },
                                 )
                               ],

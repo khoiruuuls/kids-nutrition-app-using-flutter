@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, unused_element, curly_braces_in_flow_control_structures
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, unused_element, curly_braces_in_flow_control_structures, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:kids_nutrition_app/pages/first_page.dart';
@@ -52,7 +52,7 @@ class _AddKidPageState extends State<AddKidPage> {
       });
   }
 
-  void _showModalBottomSheet(BuildContext context) {
+  void _showModalBottomSheet(BuildContext context, String message) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -62,12 +62,11 @@ class _AddKidPageState extends State<AddKidPage> {
       ),
       context: context,
       builder: (BuildContext context) {
-        // Display the modal bottom sheet content
         return Container(
-          height: 80,
+          height: 100,
           child: Center(
             child: Text(
-              "Berhasil Ditambahkan",
+              message,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -78,7 +77,6 @@ class _AddKidPageState extends State<AddKidPage> {
       },
     );
 
-    // Close the modal bottom sheet after 1 second
     Future.delayed(Duration(milliseconds: 1000), () {
       Navigator.of(context).pop();
     });
@@ -104,24 +102,29 @@ class _AddKidPageState extends State<AddKidPage> {
                         children: [
                           SizedBox(height: paddingMin),
                           InputKids(
+                            maxLength: 25,
                             text: "Nama Lengkap",
                             hintText: "Masukan Nama Lengkap",
                             controller: textNameController,
                           ),
                           SizedBox(height: paddingMin),
                           InputKids(
+                            maxLength: 16,
                             text: "NIK",
                             hintText: "Masukan NIK",
+                            isNumeric: true,
                             controller: textNikController,
                           ),
                           SizedBox(height: paddingMin),
                           InputKids(
+                            maxLength: 15,
                             text: "Jenis Kelamin",
                             hintText: "Masukan Jenis Kelamin",
                             controller: textGenderController,
                           ),
                           SizedBox(height: paddingMin),
                           InputKids(
+                            maxLength: 20,
                             text: "Tempat lahir",
                             hintText: "Masukan Tempat Lahir",
                             controller: textPlaceBirthController,
@@ -176,25 +179,39 @@ class _AddKidPageState extends State<AddKidPage> {
                           SizedBox(height: paddingMin),
                           ButtonKids(
                             text: "Tambah Data",
-                            onTap: () => {
-                              firestoreService.addKid(
-                                textNameController.text,
-                                textNikController.text,
-                                textGenderController.text,
-                                textPlaceBirthController.text,
-                                formattedDate,
-                                textHeightController.text,
-                                textWeightController.text,
-                              ),
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FirstPage(),
-                                ),
-                              ),
-                              _showModalBottomSheet(context),
+                            onTap: () async {
+                              if (textNameController.text.isEmpty ||
+                                  textNikController.text.isEmpty ||
+                                  textGenderController.text.isEmpty ||
+                                  textPlaceBirthController.text.isEmpty ||
+                                  formattedDate.isEmpty ||
+                                  textHeightController.text.isEmpty ||
+                                  textWeightController.text.isEmpty) {
+                                _showModalBottomSheet(
+                                    context, "Semua input harus diisi");
+                              } else {
+                                await firestoreService.addKid(
+                                  textNameController.text,
+                                  textNikController.text,
+                                  textGenderController.text,
+                                  textPlaceBirthController.text,
+                                  formattedDate,
+                                  textHeightController.text,
+                                  textWeightController.text,
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FirstPage(),
+                                  ),
+                                );
+                                _showModalBottomSheet(
+                                  context,
+                                  "Berhasil ditambahkan",
+                                );
+                              }
                             },
-                          )
+                          ),
                         ],
                       ),
                     ),

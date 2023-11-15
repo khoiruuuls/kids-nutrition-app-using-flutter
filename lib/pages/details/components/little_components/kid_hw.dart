@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kids_nutrition_app/main.dart';
 
 class KidHw extends StatelessWidget {
@@ -8,7 +9,9 @@ class KidHw extends StatelessWidget {
   final String textTitle;
   final TextEditingController? controller;
   final String? hintText;
+  final bool isNumeric;
   const KidHw({
+    this.isNumeric = false,
     required this.hintText,
     required this.controller,
     required this.textMeasure,
@@ -18,6 +21,16 @@ class KidHw extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<TextInputFormatter> inputFormatters = [];
+
+    // Choose formatters based on the isNumeric flag
+    if (isNumeric) {
+      inputFormatters = [FilteringTextInputFormatter.digitsOnly];
+    } else {
+      inputFormatters = [
+        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
+      ];
+    }
     return Column(
       children: [
         Text(
@@ -51,6 +64,9 @@ class KidHw extends StatelessWidget {
                   ),
                   hintText: hintText,
                 ),
+                inputFormatters: inputFormatters,
+                keyboardType:
+                    isNumeric ? TextInputType.number : TextInputType.text,
               ),
             ),
             SizedBox(width: paddingMin),
