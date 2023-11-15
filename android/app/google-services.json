@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443931550622",
+    "project_id": "kids-nutrition-app",
+    "storage_bucket": "kids-nutrition-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443931550622:android:eb509b47db29e4833a6c8f",
+        "android_client_info": {
+          "package_name": "com.example.kids_nutrition_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhbpO73Il_R5d3HVAcuOQU54t5HhQ7ULE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
