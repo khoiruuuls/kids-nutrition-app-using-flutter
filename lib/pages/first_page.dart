@@ -1,11 +1,16 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:kids_nutrition_app/pages/add_kid_page.dart';
-import 'package:kids_nutrition_app/pages/home_page.dart';
-import 'package:kids_nutrition_app/pages/setting_page.dart';
+import 'package:kids_nutrition_app/config/config_size.dart';
+import 'package:kids_nutrition_app/pages/chat_page/chat_page.dart';
 import 'package:line_icons/line_icons.dart';
+
+import '../config/config_color.dart';
+import 'kid_page/add_kid_page.dart';
+import 'home_page/home_page.dart';
+import 'profile_page/profile_page.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -25,42 +30,59 @@ class _FirstPageState extends State<FirstPage> {
 
   List<dynamic> appPage = [
     HomePage(),
-    AddKidPage(),
-    SettingPage(),
+    ChatPage(),
+    // AddKidPage(),
+    ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: appPage[selectedIndex],
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GNav(
-          rippleColor: Colors.grey,
-          hoverColor: Colors.grey,
-          haptic: true,
-          tabBorderRadius: 15,
-          onTabChange: navigationBottomBar,
-          gap: 8,
-          color: Colors.black,
-          activeColor: Colors.white,
-          iconSize: 24,
-          tabBackgroundColor: Colors.blue.shade300,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          tabs: [
-            GButton(
-              icon: LineIcons.home,
-              text: 'Beranda',
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: paddingMin * 1.25,
+          vertical: paddingMin,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: ConfigColor.darkBlue,
+            borderRadius: BorderRadius.circular(paddingMin),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(paddingMin * 0.5),
+            child: GNav(
+              rippleColor: ConfigColor.darkBlue,
+              hoverColor: ConfigColor.darkBlue,
+              haptic: true,
+              tabBorderRadius: paddingMin * 0.5,
+              onTabChange: navigationBottomBar,
+              gap: 8,
+              color: Colors.white,
+              activeColor: ConfigColor.darkBlue,
+              iconSize: 24,
+              tabBackgroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: paddingMin,
+                vertical: paddingMin * 0.75,
+              ),
+              tabs: [
+                GButton(
+                  icon: LineIcons.home,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: LineIcons.whatSApp,
+                  text: 'Chat',
+                ),
+                GButton(
+                  icon: LineIcons.user,
+                  text: 'Profile',
+                ),
+              ],
             ),
-            GButton(
-              icon: LineIcons.database,
-              text: 'Tambah Data',
-            ),
-            GButton(
-              icon: LineIcons.stream,
-              text: 'Setting',
-            ),
-          ],
+          ),
         ),
       ),
     );

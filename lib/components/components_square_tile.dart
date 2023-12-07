@@ -1,7 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:kids_nutrition_app/main.dart';
+import 'package:kids_nutrition_app/config/config_color.dart';
+
+import '../../config/config_size.dart';
 
 class ComponentsSquareTile extends StatelessWidget {
   final String imagePath;
@@ -15,19 +17,47 @@ class ComponentsSquareTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ConfigSize().init(context);
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(paddingMin),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(paddingMin),
-          color: Colors.white,
-        ),
-        child: Image.asset(
-          imagePath,
-          height: 30,
-          color: Colors.blue.shade300,
+      child: SizedBox(
+        width: paddingMin * 11,
+        child: Container(
+          decoration: BoxDecoration(
+            color: ConfigColor.darkBlue,
+            borderRadius: BorderRadius.circular(paddingMin),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 5,
+                offset: Offset(4, 4),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: paddingMin * 1.85,
+            vertical: paddingMin,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Login with",
+                  style: TextStyle(
+                    fontSize: paddingMin,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: paddingMin),
+              Image.asset(
+                imagePath,
+                height: 20,
+                color: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
     );

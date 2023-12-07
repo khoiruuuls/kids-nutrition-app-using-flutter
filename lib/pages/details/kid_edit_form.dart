@@ -2,20 +2,26 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:kids_nutrition_app/pages/components/button_kids.dart';
-import 'package:kids_nutrition_app/pages/components/input_kids.dart';
-import 'package:kids_nutrition_app/pages/details/components/kid_input_hw.dart';
-import 'package:kids_nutrition_app/pages/first_page.dart';
 
-import '../../main.dart';
+import '../../components/components_back.dart';
+import '../../components/components_button.dart';
+import '../../components/components_modal_bottom.dart';
+import '../../components/components_select_gender.dart';
+import '../../components/date_picker.dart';
+import '../../components/list_helper/component_list_helper.dart';
+import '../../services/kid_services.dart';
+import '../../components/text_editing_controller.dart';
+import '../../config/config_size.dart';
 import '../../services/firestore.dart';
-import 'components/kid_nav.dart';
+import '../../components/components/components/input_kids.dart';
+import '../../components/components/kid_input_hw.dart';
 
 class KidEditForm extends StatefulWidget {
-  final String docId;
+  final String id;
   const KidEditForm({
-    required this.docId,
+    required this.id,
     super.key,
   });
 
@@ -24,258 +30,166 @@ class KidEditForm extends StatefulWidget {
 }
 
 class _KidEditFormState extends State<KidEditForm> {
+  int selectedGenderIndex = 0;
   DateTime selectedDate = DateTime.now();
-  final TextEditingController textNameController = TextEditingController();
-  final TextEditingController textNikController = TextEditingController();
-  final TextEditingController textGenderController = TextEditingController();
-  final TextEditingController textPlaceBirthController =
-      TextEditingController();
-  final TextEditingController textDateBirthController = TextEditingController();
-  final TextEditingController textHeightController = TextEditingController();
-  final TextEditingController textWeightController = TextEditingController();
+  KidTextControllers kidTextControllers = KidTextControllers();
+  ComponentsListHelper componentsListHelper = ComponentsListHelper();
 
-  Future<Map<String, dynamic>> getKidData(String docId) async {
-    final DocumentSnapshot kidDocument =
-        await FirebaseFirestore.instance.collection('kids').doc(docId).get();
-    return kidDocument.data() as Map<String, dynamic>;
-  }
+  FirestoreService firestoreService = FirestoreService();
 
   void _showModalBottomSheet(BuildContext context, String message) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(paddingMin),
-          topRight: Radius.circular(paddingMin),
-        ),
-      ),
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 100,
-          child: Center(
-            child: Text(
-              message,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-
-    Future.delayed(Duration(milliseconds: 1000), () {
-      Navigator.of(context).pop();
-    });
+    showCustomModalBottomSheet(context, message);
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(1000),
-      lastDate: DateTime(2101),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: Colors.blue, // highlight color
-            colorScheme: ColorScheme.light(primary: Colors.blue),
-            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
-          ),
-          child: child!,
-        );
-      },
-    );
+    final DateTime? picked = await selectDate(context, selectedDate);
 
     if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
+      setState(
+        () {
+          selectedDate = picked;
+        },
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('dd MMMM yyyy').format(selectedDate);
-    return FutureBuilder<Map<String, dynamic>>(
-      future: getKidData(widget.docId), // Fetch kid's data based on docId
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            ComponentsBack(
+              textTitle: "Kids Edit",
             ),
-          ); // Display a loading indicator while fetching data
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData) {
-          final data = snapshot.data!;
-
-          // Extract the required fields
-          final name = data['name'];
-          final nik = data['nik'];
-          final gender = data['gender'];
-          final placeBirth = data['placeBirth'];
-          final height = data['height'];
-          final weight = data['weight'];
-
-          final FirestoreService firestoreService = FirestoreService();
-
-          return Scaffold(
-            // Rest of your KidEditForm widget
-            body: SafeArea(
-              child: Column(
-                children: [
-                  KidNav(
-                    docId: widget.docId,
-                    textTitle: "Edit Data Anak",
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
+            Expanded(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: paddingMin),
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(paddingMin),
-                            child: Column(
-                              children: [
-                                SizedBox(height: paddingMin),
-                                InputKids(
-                                  maxLength: 25,
-                                  docId: widget.docId,
-                                  text: "Nama Lengkap",
-                                  hintText: name,
-                                  controller:
-                                      textNameController, // Set hintText from the data
+                          SizedBox(height: paddingMin),
+                          InputKids(
+                            maxLength: 23,
+                            id: widget.id,
+                            text: "Nama Lengkap",
+                            hintText: "Masukan Nama Lengkap",
+                            controller: kidTextControllers.textNameController,
+                            obscureText: false,
+                          ),
+                          SizedBox(height: paddingMin),
+                          InputKids(
+                            maxLength: 16,
+                            id: widget.id,
+                            text: "NIK",
+                            hintText: "Masukan NIK",
+                            isNumeric: true,
+                            controller: kidTextControllers.textNikController,
+                            obscureText: false,
+                          ),
+                          SizedBox(height: paddingMin),
+                          ComponentsSelectGender(
+                            onGenderSelected: (index) {
+                              if (selectedGenderIndex != 1) {
+                                setState(() {
+                                  selectedGenderIndex = index;
+                                });
+                              }
+                            },
+                          ),
+                          InputKids(
+                            maxLength: 20,
+                            id: widget.id,
+                            text: "Tempat lahir",
+                            hintText: "Masukan Tempat Lahir",
+                            controller:
+                                kidTextControllers.textPlaceBirthController,
+                            obscureText: false,
+                          ),
+                          SizedBox(height: paddingMin),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: paddingMin + 5),
+                                child: Text(
+                                  "Tanggal lahir",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                SizedBox(height: paddingMin),
-                                InputKids(
-                                  maxLength: 16,
-                                  docId: widget.docId,
-                                  text: "NIK",
-                                  hintText: nik,
-                                  isNumeric: true,
-                                  controller:
-                                      textNikController, // Set hintText from the data
-                                ),
-                                SizedBox(height: paddingMin),
-                                InputKids(
-                                  maxLength: 15,
-                                  docId: widget.docId,
-                                  text: "Jenis Kelamin",
-                                  hintText:
-                                      gender, // Set hintText from the data
-                                  controller:
-                                      textGenderController, // Set hintText from the data
-                                ),
-                                SizedBox(height: paddingMin),
-                                InputKids(
-                                  maxLength: 20,
-                                  docId: widget.docId,
-                                  text: "Tempat lahir",
-                                  hintText:
-                                      placeBirth, // Set hintText from the data
-                                  controller:
-                                      textPlaceBirthController, // Set hintText from the data
-                                ),
-                                SizedBox(height: paddingMin),
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 110,
-                                      child: Text(
-                                        "Tanggal lahir",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+                              ),
+                              SizedBox(height: paddingMin),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: paddingMin - 5),
+                                child: GestureDetector(
+                                  onTap: () => _selectDate(context),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: paddingMin * 5 / 4,
+                                      horizontal: paddingMin * 3 / 2,
                                     ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () => _selectDate(context),
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: paddingMin * 5 / 4,
-                                            horizontal: paddingMin * 3 / 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                width: 1,
-                                                color: Colors.grey.shade500),
-                                            borderRadius: BorderRadius.circular(
-                                                paddingMin / 2),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                blurRadius: 4,
-                                                offset: Offset(1, 1),
-                                              ),
-                                            ],
-                                          ),
-                                          width: double.infinity,
-                                          child: Text(formattedDate),
-                                        ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.grey.shade300,
                                       ),
+                                      borderRadius:
+                                          BorderRadius.circular(paddingMin),
                                     ),
-                                  ],
+                                    width: double.infinity,
+                                    child: Text(
+                                      formattedDate,
+                                      style: GoogleFonts.poppins(),
+                                    ),
+                                  ),
                                 ),
-                                KidInputHw(
-                                  hintTextHeight: height,
-                                  hintTextWeight: weight,
-                                  controllerHeight: textHeightController,
-                                  controllerWeight: textWeightController,
-                                ),
-                                SizedBox(height: paddingMin),
-                                ButtonKids(
-                                  text: "Ubah data",
-                                  onTap: () async {
-                                    if (textNameController.text.isEmpty ||
-                                        textNikController.text.isEmpty ||
-                                        textGenderController.text.isEmpty ||
-                                        textPlaceBirthController.text.isEmpty ||
-                                        formattedDate.isEmpty ||
-                                        textHeightController.text.isEmpty ||
-                                        textWeightController.text.isEmpty) {
-                                      _showModalBottomSheet(
-                                          context, "Semua input harus diisi");
-                                    } else {
-                                      await firestoreService.updateKid(
-                                        widget.docId,
-                                        textNameController.text,
-                                        textNikController.text,
-                                        textGenderController.text,
-                                        textPlaceBirthController.text,
-                                        formattedDate,
-                                        textHeightController.text,
-                                        textWeightController.text,
-                                      );
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => FirstPage(),
-                                        ),
-                                      );
-                                      _showModalBottomSheet(
-                                          context, "Berhasil diubah");
-                                    }
-                                  },
-                                )
-                              ],
+                              ),
+                            ],
+                          ),
+                          KidInputHw(
+                            hintTextHeight: 50,
+                            hintTextWeight: 50,
+                            controllerHeight:
+                                kidTextControllers.textHeightController,
+                            controllerWeight:
+                                kidTextControllers.textWeightController,
+                          ),
+                          SizedBox(height: paddingMin),
+                          ComponentsButton(
+                            text: "Ubah data",
+                            onTap: () => KidServices.editKid(
+                              context,
+                              widget.id,
+                              kidTextControllers.textNameController,
+                              kidTextControllers.textNikController,
+                              componentsListHelper.gender[selectedGenderIndex],
+                              kidTextControllers.textPlaceBirthController,
+                              formattedDate,
+                              kidTextControllers.textHeightController,
+                              kidTextControllers.textWeightController,
                             ),
                           ),
+                          SizedBox(height: 100),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          );
-        } else {
-          return Text('No data available');
-        }
-      },
+          ],
+        ),
+      ),
     );
   }
 }
