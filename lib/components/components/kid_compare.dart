@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kids_nutrition_app/components/components/component_nutritions.dart';
 
 import '../../model/model_nutritional_need.dart';
+import '../components_no_data.dart';
 
 class KidCompare extends StatelessWidget {
   final int age;
@@ -35,33 +36,50 @@ class KidCompare extends StatelessWidget {
               snapshot.data!.data() as Map<String, dynamic>;
 
           // Assuming total value is stored in the 'total' field
-          double total = data['karbohidrat'] +
-                  data['serat'] +
-                  data['air'] +
-                  data['kalori'] +
-                  data['lemak'] +
-                  data['protein'] ??
-              0.0;
+          // double total = data['karbohidrat'] +
+          //         data['serat'] +
+          //         data['air'] +
+          //         data['kalori'] +
+          //         data['lemak'] +
+          //         data['protein'] ??
+          //     0.0;
 
           // Calculate percentages
-          double inPercentKarbohidrat =
-              (data['karbohidrat'] as double?)! / total * 100;
-          double inPercentSerat = (data['serat'] as double?)! / total * 100;
-          double inPercentAir = (data['air'] as double?)! / total * 100;
-          double inPercentKalori = (data['kalori'] as double?)! / total * 100;
-          double inPercentLemak = (data['lemak'] as double?)! / total * 100;
-          double inPercentProtein = (data['protein'] as double?)! / total * 100;
+          // double inPercentKarbohidrat =
+          //     (data['karbohidrat'] as double?)! / total * 100;
+          // double inPercentSerat = (data['serat'] as double?)! / total * 100;
+          // double inPercentAir = (data['air'] as double?)! / total * 100;
+          // double inPercentKalori = (data['kalori'] as double?)! / total * 100;
+          // double inPercentLemak = (data['lemak'] as double?)! / total * 100;
+          // double inPercentProtein = (data['protein'] as double?)! / total * 100;
 
+          // return ComponentsNutritions(
+          //   carbohydrates: inPercentKarbohidrat.toStringAsFixed(2) + '%',
+          //   fiber: inPercentSerat.toStringAsFixed(2) + '%',
+          //   water: inPercentAir.toStringAsFixed(2) + '%',
+          //   energy: inPercentKalori.toStringAsFixed(2) + '%',
+          //   fat: inPercentLemak.toStringAsFixed(2) + '%',
+          //   protein: inPercentProtein.toStringAsFixed(2) + '%',
+          // );
+          // return ComponentsNutritions(
+          //   carbohydrates: inPercentKarbohidrat.toStringAsFixed(2) + '%',
+          //   fiber: inPercentSerat.toStringAsFixed(2) + '%',
+          //   water: inPercentAir.toStringAsFixed(2) + '%',
+          //   energy: inPercentKalori.toStringAsFixed(2) + '%',
+          //   fat: inPercentLemak.toStringAsFixed(2) + '%',
+          //   protein: inPercentProtein.toStringAsFixed(2) + '%',
+          // );
           return ComponentsNutritions(
-            carbohydrates: inPercentKarbohidrat.toStringAsFixed(2) + '%',
-            fiber: inPercentSerat.toStringAsFixed(2) + '%',
-            water: inPercentAir.toStringAsFixed(2) + '%',
-            energy: inPercentKalori.toStringAsFixed(2) + '%',
-            fat: inPercentLemak.toStringAsFixed(2) + '%',
-            protein: inPercentProtein.toStringAsFixed(2) + '%',
+            text: "Require Nutrition by age and gender",
+            carbohydrates: data['karbohidrat'].toString(),
+            fiber: data['serat'].toString(),
+            water: data['air'].toString(),
+            energy: data['kalori'].toString(),
+            fat: data['lemak'].toString(),
+            protein: data['protein'].toString(),
           );
         } else {
-          return Text('apa');
+          return const ComponentsNoData();
         }
       },
     );

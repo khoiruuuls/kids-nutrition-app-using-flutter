@@ -78,13 +78,19 @@ class _RoleKidsRecipeDetailState extends State<RoleKidsRecipeDetail> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: paddingMin),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.recipe.label,
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: paddingMin),
+                                  child: Text(
+                                    widget.recipe.label,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),

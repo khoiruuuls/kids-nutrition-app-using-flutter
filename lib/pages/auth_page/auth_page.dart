@@ -3,10 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kids_nutrition_app/pages/auth_page/role_validation_page.dart';
-import 'package:kids_nutrition_app/pages/recipe_page/recipe_page.dart';
-import 'package:kids_nutrition_app/pages/role_kids/role_kids_page.dart';
 import 'sign_in_page.dart';
-import 'sign_up_page.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({Key? key});

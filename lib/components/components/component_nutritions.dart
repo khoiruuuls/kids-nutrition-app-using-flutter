@@ -13,6 +13,7 @@ class ComponentsNutritions extends StatelessWidget {
   final String energy;
   final String fat;
   final String protein;
+  final String? text;
 
   const ComponentsNutritions({
     required this.carbohydrates,
@@ -21,6 +22,7 @@ class ComponentsNutritions extends StatelessWidget {
     required this.energy,
     required this.fat,
     required this.protein,
+    this.text,
     super.key,
   });
 
@@ -46,6 +48,16 @@ class ComponentsNutritions extends StatelessWidget {
       ),
       child: Column(
         children: [
+          text != null
+              ? Text(
+                  text!,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: paddingMin,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              : SizedBox.shrink(),
           SizedBox(height: ConfigSize.blockSizeVertical! * 2.5),
           Row(
             children: [

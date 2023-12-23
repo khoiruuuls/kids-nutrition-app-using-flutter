@@ -11,8 +11,10 @@ class ListKidsNew extends StatelessWidget {
   final String id;
   final String date;
   final String time;
+  final bool isShow;
   final Function()? onTap;
   const ListKidsNew({
+    this.isShow = false, // Set the default value to false
     this.role,
     required this.time,
     required this.date,
@@ -81,12 +83,14 @@ class ListKidsNew extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: ConfigSize.blockSizeVertical! * 1),
-                  Text(
-                    "${time}, ${date}",
-                    style: GoogleFonts.poppins(
-                      fontSize: paddingMin * 0.85,
-                    ),
-                  )
+                  isShow
+                      ? Text(
+                          "${time}, ${date}",
+                          style: GoogleFonts.poppins(
+                            fontSize: paddingMin * 0.75,
+                          ),
+                        )
+                      : SizedBox.shrink()
                 ],
               ),
             ),

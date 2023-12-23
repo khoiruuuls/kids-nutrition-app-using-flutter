@@ -31,7 +31,8 @@ class ChatPage extends StatelessWidget {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection("users")
-                    .where('role', isNotEqualTo: "Anak Panti")
+                    .where('role', whereIn: ["Pengurus Panti", "Ahli Gizi"])
+                    .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -93,6 +94,7 @@ class ChatPage extends StatelessWidget {
                                   date: formattedDate,
                                   time: formattedTime,
                                   name: name,
+                                  isShow: true,
                                 ),
                               );
                             },

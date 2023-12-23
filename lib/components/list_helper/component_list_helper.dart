@@ -12,7 +12,6 @@ class ComponentsListHelper {
     "Pengurus Panti",
     "Anak Panti",
     "Ahli Gizi",
-    "Dokter",
   ];
 
   List<String> images = [
@@ -42,26 +41,22 @@ class ComponentsListHelper {
   ];
 
   List<String> food = [
-    'Nasi Goreng',
-    'Ayam Goreng',
-    'Sayur Bening',
-    'Mie Goreng',
-    'Bubur Ayam',
-    'Es Krim',
-    'Pisang Goreng',
+    'Sayur',
+    'Bubur',
+    'Ice Cream',
+    'Pisang',
     'Sop Ayam',
-    'Roti Bakar',
-    'Nugget Ayam',
-    'Spaghetti Bolognese',
+    'Bread',
+    'Ayam',
     'Bakso',
-    'Nasi Tim',
-    'Telur Dadar',
-    'Kentang Goreng',
-    'Jus Buah Segar',
-    'Pancake dengan Sirup Maple',
-    'Capcay',
-    'Ikan Panggang',
-    'Mie Kuah',
+    'Nasi',
+    'Telur',
+    'Kentang',
+    'Juice',
+    'Pancake',
+    'Bayam',
+    'Ikan',
+    'Mie',
   ];
 
   List<String> gender = [
@@ -72,4 +67,14 @@ class ComponentsListHelper {
   ComponentsListHelper() {
     food.shuffle();
   }
+
+  List<double> weeklySummary = [
+    4.78,
+    9.34,
+    5.90,
+    5.50,
+    4.75,
+    6.76,
+    7.90,
+  ];
 }

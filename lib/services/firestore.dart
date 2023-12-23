@@ -120,7 +120,7 @@ class FirestoreService {
   /* ------ add kid_nutrition */
 
   Future<void> addKidNutritionRelation(String kidId, String nutritionId) {
-    return kidNutrition.add({
+    return kidNutrition.doc(nutritionId).set({
       'kidId': kidId,
       'nutritionId': nutritionId,
       "timestamp": Timestamp.now(),

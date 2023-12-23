@@ -7,6 +7,7 @@ class AuthService {
   Future<UserCredential> signInWithGoogle() async {
     // Begin interactive sign process
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
     // Check if the user canceled the sign-in
     if (googleUser == null) {
@@ -32,11 +33,23 @@ class AuthService {
     String userName = userCredential.user!.displayName!;
 
     // Store user data in Firestore
-    await FirebaseFirestore.instance.collection("Users").doc(userEmail).set({
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .set({
       'name': userName,
-      'role': "empty role . . .",
-      'phone': "empty phone . . .",
-      'bio': "empty bio . . .",
+      'uid': auth.currentUser!.uid,
+      'email': userEmail,
+      'role': "Anak Panti",
+      'gender': "Laki Laki",
+      'weight': 0.0,
+      'height': 0.0,
+      'bio': "No data record .",
+      'phone': "No data record .",
+      'nik': "No data record .",
+      'dateBirth': "No data record .",
+      'placeBirth': "No data record .",
+      'timestamp': Timestamp.now(),
     });
 
     // Return the user credential

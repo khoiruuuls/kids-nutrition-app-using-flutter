@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kids_nutrition_app/config/config_color.dart';
 
 import '../../../config/config_size.dart';
 
@@ -22,12 +23,13 @@ class KidBanner extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 16,
+            color: Colors.white
           ),
         ),
       ),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ConfigColor.darkBlue,
         borderRadius: BorderRadius.circular(paddingMin / 2),
         boxShadow: [
           BoxShadow(

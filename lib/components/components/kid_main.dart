@@ -7,7 +7,6 @@ import '../../config/config_size.dart';
 import 'kid_heading.dart';
 import 'kid_history.dart';
 import 'kid_information.dart';
-import 'kid_target.dart';
 
 class KidMain extends StatelessWidget {
   final String id;
@@ -30,8 +29,6 @@ class KidMain extends StatelessWidget {
                   KidHeading(id: id),
                   SizedBox(height: paddingMin),
                   KidInformation(id: id),
-                  SizedBox(height: paddingMin),
-                  KidTarget(id: id),
                   SizedBox(height: paddingMin),
                   KidBanner(text: "Riwayat Makan"),
                   SizedBox(height: paddingMin),

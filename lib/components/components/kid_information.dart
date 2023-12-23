@@ -8,7 +8,7 @@ import 'package:kids_nutrition_app/model/model_age_counter.dart';
 import '../../config/config_color.dart';
 import '../../config/config_size.dart';
 import '../../services/firestore.dart';
-import 'kid_compare.dart';
+import '../components_scrolled_horizontal.dart';
 
 class KidInformation extends StatefulWidget {
   final String id;
@@ -156,10 +156,11 @@ class _KidInformationState extends State<KidInformation> {
                   ),
                 ),
                 SizedBox(height: paddingMin),
-                KidCompare(
+                ComponentsScrolledHorizontal(
+                  id: widget.id,
                   age: ageCounter.calculateAge(data['dateBirth']),
                   gender: data['gender'],
-                )
+                ),
               ],
             );
           } else {

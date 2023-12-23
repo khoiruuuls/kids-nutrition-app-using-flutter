@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_function_declarations_over_variables
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icon.dart';
 
 import 'config_color.dart';
 

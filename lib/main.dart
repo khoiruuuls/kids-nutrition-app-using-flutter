@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,7 +10,7 @@ import 'pages/setting_page/setting_page.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
+    const SystemUiOverlayStyle(
       statusBarColor: Colors.white,
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
@@ -35,18 +33,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthPage(),
+      home: const AuthPage(),
       routes: {
-        '/homepage': (context) => HomePage(),
-        '/setting': (context) => SettingPage(),
+        '/homepage': (context) => const HomePage(),
+        '/setting': (context) => const SettingPage(),
         '/chat': (context) => ChatPage(),
       },
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en', ''),
+      supportedLocales: const [
+        Locale('en', ''),
       ],
     );
   }

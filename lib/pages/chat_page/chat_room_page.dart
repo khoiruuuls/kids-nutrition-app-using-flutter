@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kids_nutrition_app/components/components_back.dart';
 import 'package:kids_nutrition_app/components/components_chat_bubble.dart';
 import 'package:kids_nutrition_app/components/components_input.dart';
@@ -37,8 +38,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       await chatService.sendMessage(
         widget.recieverUserID,
         messageController.text,
+        Timestamp.now(),
       );
       messageController.clear();
+
+      await chatService.updateTimestamp(widget.recieverUserID, Timestamp.now());
     }
   }
 
@@ -95,6 +99,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         ? Alignment.centerRight
         : Alignment.centerLeft;
 
+    var timestamp = data["timestamp"];
+    String formattedDate =
+        DateFormat('hh : mm, dd MMMM yyyy').format(timestamp.toDate());
+
     return Container(
       alignment: alignment,
       child: Padding(
@@ -109,14 +117,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           children: [
             SizedBox(height: paddingMin * 0.2),
             ComponentsChatBubble(
-              message: data["message"],
-              colorContainer: (data['senderId'] == auth.currentUser!.uid)
-                  ? ConfigColor.chatSend
-                  : ConfigColor.chatReceive,
-              colorText: (data['senderId'] == auth.currentUser!.uid)
-                  ? ConfigColor.chatReceive
-                  : ConfigColor.chatSend,
-            ),
+                message: data["message"],
+                colorContainer: (data['senderId'] == auth.currentUser!.uid)
+                    ? ConfigColor.chatSend
+                    : ConfigColor.chatReceive,
+                colorText: (data['senderId'] == auth.currentUser!.uid)
+                    ? ConfigColor.chatReceive
+                    : ConfigColor.chatSend,
+                date: formattedDate),
           ],
         ),
       ),

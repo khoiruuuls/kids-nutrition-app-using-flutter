@@ -1,13 +1,12 @@
-// ignore_for_file: unnecessary_null_comparison, prefer_const_constructors, unused_local_variable, prefer_const_literals_to_create_immutables
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kids_nutrition_app/components/components/kid_history_detail_page.dart';
-import 'package:kids_nutrition_app/services/firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:kids_nutrition_app/components/components/kid_history_detail_page.dart';
+import 'package:kids_nutrition_app/components/components_no_data.dart';
+import 'package:kids_nutrition_app/services/firestore.dart';
 
+import '../../config/config_color.dart';
 import '../../config/config_size.dart';
 
 class KidHistory extends StatefulWidget {
@@ -27,6 +26,7 @@ class _KidHistoryState extends State<KidHistory> {
 
   @override
   Widget build(BuildContext context) {
+    ConfigSize().init(context);
     return StreamBuilder(
       stream: firestoreService.getNutritionForKid(widget.id),
       builder: (context, snapshot) {
@@ -34,8 +34,7 @@ class _KidHistoryState extends State<KidHistory> {
           final nutritionList = snapshot.data!.docs.map((document) {
             final data = document.data() as Map<String, dynamic>;
             final nutritionId = data['nutritionId'] ?? '';
-            final timestamp = data['timestamp'] ??
-                "" as Timestamp; // Assuming 'timestamp' is the field name in Firestore
+            final timestamp = data['timestamp'] ?? "" as Timestamp;
             String timestampString =
                 timestamp != null ? timestamp.toDate().toString() : '';
             return {'nutritionId': nutritionId, 'timestamp': timestampString};
@@ -53,23 +52,17 @@ class _KidHistoryState extends State<KidHistory> {
                 builder: (context, nutritionSnapshot) {
                   if (nutritionSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return Text("");
+                    return const Text("");
                   }
                   if (nutritionSnapshot.hasData) {
-                    // Extract data from the retrieved document
                     final nutritionData =
                         nutritionSnapshot.data!.data() as Map<String, dynamic>;
 
                     // Now, you can access and display the nutrition data
                     String nutritionName = nutritionData['name'] ?? '';
                     String nutritionImage = nutritionData['image'] ?? '';
-                    double? nutritionKalori = nutritionData['kalori'] ?? '';
-                    double? nutritionKarbohidrat =
-                        nutritionData['karbohidrat'] ?? '';
-                    double? nutritionLemak = nutritionData['lemak'] ?? '';
-                    double? nutritionProtein = nutritionData['protein'] ?? '';
-                    Timestamp timestamp = nutritionData['timestamp'];
-                    String formattedDate = DateFormat('hh : mm, dd MMM yyyy')
+                    var timestamp = nutritionData["timestamp"];
+                    String formattedDate = DateFormat('hh : mm, dd MMMM yyyy')
                         .format(timestamp.toDate());
 
                     return GestureDetector(
@@ -87,42 +80,99 @@ class _KidHistoryState extends State<KidHistory> {
                           Stack(
                             alignment: Alignment.bottomLeft,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    10), // Set your desired border radius
-                                child: CachedNetworkImage(
-                                  imageUrl: nutritionImage,
-                                  placeholder: (context, url) => Placeholder(),
-                                  errorWidget: (context, url, error) =>
-                                      Placeholder(), // Handle errors here
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: paddingMin,
-                                        vertical: paddingMin / 2,
-                                      ),
+                                      height: 200,
+                                      width: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.7),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(paddingMin / 2),
+                                        borderRadius: BorderRadius.circular(
+                                          kBorderRadius20,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            spreadRadius: 0,
+                                            offset: const Offset(0, 18),
+                                            blurRadius: 18,
+                                            color: kBlack.withOpacity(0.1),
+                                          )
+                                        ],
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                            nutritionImage,
+                                          ),
                                         ),
                                       ),
-                                      child: Text(
-                                        nutritionName,
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontSize: paddingMin,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      child: Stack(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                              height: 200,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  bottomLeft: Radius.circular(
+                                                      kBorderRadius20),
+                                                  bottomRight: Radius.circular(
+                                                      kBorderRadius20),
+                                                ),
+                                                gradient: kLinearGradientBlack,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(
+                                                kPadding20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [],
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      nutritionName,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        color: kWhite,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: paddingMin,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                        height:
+                                                            paddingMin * 0.25),
+                                                    Text(
+                                                      formattedDate,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        color: kWhite,
+                                                        fontSize:
+                                                            paddingMin * 0.75,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -130,21 +180,18 @@ class _KidHistoryState extends State<KidHistory> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: paddingMin,
-                          )
                         ],
                       ),
                     );
                   } else {
-                    return Text("data");
+                    return const ComponentsNoData();
                   }
                 },
               );
             }).toList(),
           );
         } else {
-          return Text("Tidak ada data");
+          return const ComponentsNoData();
         }
       },
     );

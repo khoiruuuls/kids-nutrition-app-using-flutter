@@ -8,9 +8,11 @@ import '../../../config/config_size.dart';
 class ComponentsButton extends StatelessWidget {
   final String text;
   final Function()? onTap;
+  final Color? color;
   const ComponentsButton({
     required this.onTap,
     required this.text,
+    this.color,
     super.key,
   });
 
@@ -20,7 +22,7 @@ class ComponentsButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: ConfigColor.darkBlue,
+          color: color ?? ConfigColor.darkBlue,
           borderRadius: BorderRadius.circular(paddingMin),
           boxShadow: [
             BoxShadow(

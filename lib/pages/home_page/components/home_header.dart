@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../config/config_size.dart';
-import 'home_kids_search.dart';
 
 class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
@@ -16,19 +15,6 @@ class HomeHeader extends StatefulWidget {
 
 class _HomeHeaderState extends State<HomeHeader> {
   final currentUser = FirebaseAuth.instance.currentUser!;
-
-  String getGreeting() {
-    DateTime now = DateTime.now();
-    int hour = now.hour;
-
-    if (hour < 12) {
-      return 'Hello, Good Morning ☀️';
-    } else if (hour < 17) {
-      return 'Hello, Good Afternoon 🌤️';
-    } else {
-      return 'Hello, Good Evening 🌙';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +40,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          getGreeting(),
+                          "Hello,",
                           style: GoogleFonts.poppins(),
                         ),
                         Text(
