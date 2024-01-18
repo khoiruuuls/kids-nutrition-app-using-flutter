@@ -7,12 +7,18 @@ class ComponentsChatBubble extends StatelessWidget {
   final Color? colorContainer;
   final Color? colorText;
   final String date;
+  final Color? colorDate;
+  final CrossAxisAlignment crossAlignment;
+  final BorderRadiusGeometry? borderRadiusGeometry;
 
   const ComponentsChatBubble({
     required this.colorContainer,
     required this.colorText,
     required this.message,
     required this.date,
+    required this.colorDate,
+    required this.crossAlignment,
+    required this.borderRadiusGeometry,
     Key? key,
   }) : super(key: key);
 
@@ -29,7 +35,7 @@ class ComponentsChatBubble extends StatelessWidget {
         right: paddingMin,
       ), // Adjust as needed
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(paddingMin * 0.85),
+        borderRadius: borderRadiusGeometry,
         color: colorContainer,
         boxShadow: [
           BoxShadow(
@@ -40,7 +46,7 @@ class ComponentsChatBubble extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: crossAlignment,
         children: [
           Text(
             message,
@@ -52,7 +58,7 @@ class ComponentsChatBubble extends StatelessWidget {
           const SizedBox(height: paddingMin * 0.5),
           Text(
             date,
-            style: GoogleFonts.poppins(fontSize: 12),
+            style: GoogleFonts.poppins(fontSize: 12, color: colorDate),
           ),
         ],
       ),

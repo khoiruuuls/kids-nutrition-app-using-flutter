@@ -21,16 +21,13 @@ class KidBanner extends StatelessWidget {
         child: Text(
           text,
           style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.white
-          ),
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
         ),
       ),
       width: double.infinity,
       decoration: BoxDecoration(
         color: ConfigColor.darkBlue,
-        borderRadius: BorderRadius.circular(paddingMin / 2),
+        borderRadius: BorderRadius.circular(paddingMin * 0.75),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,

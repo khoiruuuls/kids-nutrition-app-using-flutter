@@ -121,7 +121,6 @@ class _RoleKidsRecipeDetailState extends State<RoleKidsRecipeDetail> {
                                         id: widget.id,
                                         recipe: widget.recipe,
                                       ),
-                                      ComponentsCounter(),
                                     ],
                                   ),
                                 ),

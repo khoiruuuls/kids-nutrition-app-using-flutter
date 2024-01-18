@@ -21,7 +21,7 @@ class ComponentsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     ConfigSize().init(context);
 
-    deleteField() {
+   deleteField () {
       showDialog(
         context: context,
         builder: (BuildContext context) {

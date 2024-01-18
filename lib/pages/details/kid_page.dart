@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kids_nutrition_app/components/components_back.dart';
+import 'package:kids_nutrition_app/pages/first_page.dart';
 
 import '../../components/components/kid_floating_button.dart';
 import '../../components/components/kid_main.dart';
@@ -21,7 +22,17 @@ class KidPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            ComponentsBack(textTitle: "Kids Data", id: id),
+            ComponentsBack(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => FirstPage(),
+                    ),
+                  );
+                },
+                textTitle: "Kids Data",
+                id: id),
             KidMain(id: id),
           ],
         ),
@@ -29,8 +40,8 @@ class KidPage extends StatelessWidget {
       floatingActionButton: Stack(
         children: [
           Positioned(
-            bottom: 16, // Adjust the position as needed
-            right: 8, // Adjust the position as needed
+            bottom: 16,
+            right: 8,
             child: KidFloatingButton(
               id: id,
               icon: Icons.add,

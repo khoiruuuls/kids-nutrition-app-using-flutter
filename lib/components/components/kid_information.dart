@@ -3,12 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kids_nutrition_app/components/components/kid_compare.dart';
 import 'package:kids_nutrition_app/model/model_age_counter.dart';
 
 import '../../config/config_color.dart';
 import '../../config/config_size.dart';
 import '../../services/firestore.dart';
 import '../components_scrolled_horizontal.dart';
+import '../components_note.dart';
+import 'kid_target.dart';
 
 class KidInformation extends StatefulWidget {
   final String id;
@@ -27,13 +30,13 @@ class _KidInformationState extends State<KidInformation> {
 
   String calculateBMICategory(double bmi) {
     if (bmi < 18.5) {
-      return "Underweight";
+      return "Berat Badan Kurang";
     } else if (bmi < 24.9) {
-      return "Normal";
+      return "Berat Badan Ideal";
     } else if (bmi < 29.9) {
-      return "Overweight";
+      return "Berat Badan Berlebih";
     } else {
-      return "Obese";
+      return "Obesitas";
     }
   }
 
@@ -156,18 +159,20 @@ class _KidInformationState extends State<KidInformation> {
                   ),
                 ),
                 SizedBox(height: paddingMin),
-                ComponentsScrolledHorizontal(
-                  id: widget.id,
-                  age: ageCounter.calculateAge(data['dateBirth']),
-                  gender: data['gender'],
-                ),
+                KidCompare(
+                    age: ageCounter.calculateAge(
+                      data['dateBirth'],
+                    ),
+                    gender: data['gender']),
+                SizedBox(height: paddingMin),
+                KidTarget(id: widget.id),
               ],
             );
           } else {
-            return Text('No data available');
+            return Text('');
           }
         } else {
-          return Text('No data available');
+          return Text('');
         }
       },
     );

@@ -36,6 +36,7 @@ class ComponentsAddNutrition extends StatelessWidget {
             recipe.protein,
             recipe.water,
             recipe.fiber,
+            recipe.totalSingleNutrition,
           );
           String nutritionId = nutritionReference.id;
           await firestoreService.addKidNutritionRelation(id, nutritionId);

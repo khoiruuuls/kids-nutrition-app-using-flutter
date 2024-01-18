@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kids_nutrition_app/components/components/component_nutritions.dart';
 import 'package:kids_nutrition_app/components/components_add_nutrition.dart';
 import 'package:kids_nutrition_app/components/components_back.dart';
-import 'package:kids_nutrition_app/components/components_counter.dart';
 import 'package:kids_nutrition_app/model/model_recepies.dart';
 import 'package:kids_nutrition_app/services/firestore.dart';
 
@@ -124,7 +123,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                                         id: widget.id,
                                         recipe: widget.recipe,
                                       ),
-                                      ComponentsCounter(),
                                     ],
                                   ),
                                 ),

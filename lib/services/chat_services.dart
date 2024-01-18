@@ -36,7 +36,15 @@ class ChatService extends ChangeNotifier {
         .add(newMessage.toMap());
   }
 
-  Future<void> updateTimestamp(String receiverId, Timestamp timestamp) async {
+  Future<void> updateTimestamp(
+      String senderId, String receiverId, Timestamp timestamp) async {
+    // Update timestamp for sender
+    await firebaseFirestore
+        .collection("users")
+        .doc(senderId)
+        .update({'timestamp': timestamp});
+
+    // Update timestamp for receiver
     await firebaseFirestore
         .collection("users")
         .doc(receiverId)

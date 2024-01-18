@@ -7,7 +7,6 @@ import 'package:kids_nutrition_app/components/components_get_user_data.dart';
 import 'package:kids_nutrition_app/components/components_no_data.dart';
 import '../../config/config_size.dart';
 import '../../services/firestore.dart';
-import '../components_note.dart';
 import 'little_components/kid_banner.dart';
 
 class KidTarget extends StatefulWidget {
@@ -31,6 +30,12 @@ class _KidTargetState extends State<KidTarget> {
       totalAir,
       totalSingleNutrition,
       totalAll;
+  double? inPercentKalori,
+      inPercentProtein,
+      inPercentLemak,
+      inPercentKarbohidrat,
+      inPercentSerat,
+      inPercentAir;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +86,7 @@ class _KidTargetState extends State<KidTarget> {
             ]),
             builder: (context, futuresSnapshot) {
               if (futuresSnapshot.connectionState == ConnectionState.waiting) {
-                return const Text('');
+                return Text('Loading...');
               }
 
               List<double?> kaloriList =
@@ -146,43 +151,18 @@ class _KidTargetState extends State<KidTarget> {
                     singleFutures.length,
               );
 
-              hitung(List<double?> hello) {
-                List<Map<String, dynamic>> totalSingleNutrition = [];
-                Map<String, double> dateSumMap = {};
-
-                for (int i = 0; i < hello.length; i++) {
-                  final timestamp = snapshot.data!.docs[i]['timestamp'];
-                  final date = timestamp.toDate().toString().split(' ')[0];
-                  final total = hello[i];
-
-                  dateSumMap[date] = (dateSumMap[date] ?? 0) + (total ?? 0);
-
-                  totalSingleNutrition
-                      .add({'timestamp': timestamp, 'total': total});
-                }
-
-                totalSingleNutrition
-                    .sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
-
-                Map<String, String> chartData = {};
-
-                dateSumMap.forEach((date, total) {
-                  chartData[date] = total.toStringAsFixed(2);
-                });
-
-                DateTime currentDate = DateTime.now();
-                List<String> days = [];
-
-                for (int i = 0; i < 7; i++) {
-                  DateTime pastDate = currentDate.subtract(Duration(days: i));
-                  String formattedDate =
-                      pastDate.toLocal().toString().split(' ')[0];
-
-                  days.add(formattedDate);
-                }
-
-                return chartData[days[0]];
-              }
+              totalKalori = kaloriList.fold(
+                  0, (previous, current) => previous! + current!);
+              totalProtein = proteinList.fold(
+                  0, (previous, current) => previous! + current!);
+              totalLemak = lemakList.fold(
+                  0, (previous, current) => previous! + current!);
+              totalKarbohidrat = karbohidratList.fold(
+                  0, (previous, current) => previous! + current!);
+              totalSerat = seratList.fold(
+                  0, (previous, current) => previous! + current!);
+              totalAir =
+                  airList.fold(0, (previous, current) => previous! + current!);
 
               List<Map<String, dynamic>> totalSingleNutrition = [];
               Map<String, double> dateSumMap = {};
@@ -231,17 +211,14 @@ class _KidTargetState extends State<KidTarget> {
                 children: [
                   ComponentsGetUserData(
                     id: widget.id,
-                    carbohydrates:
-                        double.parse(hitung(karbohidratList) ?? "0.0"),
-                    fiber: double.parse(hitung(seratList) ?? "0.0"),
-                    water: double.parse(hitung(airList) ?? "0.0"),
-                    energy: double.parse(hitung(kaloriList) ?? "0.0"),
-                    fat: double.parse(hitung(lemakList) ?? "0.0"),
-                    protein: double.parse(hitung(proteinList) ?? "0.0"),
-                    kalori: initial,
+                    carbohydrates: totalKarbohidrat,
+                    fiber: totalSerat,
+                    water: totalAir,
+                    energy: totalKalori,
+                    fat: totalLemak,
+                    protein: totalProtein,
+                    kalori: totalKalori,
                   ),
-                  const SizedBox(height: paddingMin),
-                  const ComponentsNote(),
                   const SizedBox(height: paddingMin),
                   const KidBanner(text: "Riwayat Makan"),
                   const SizedBox(height: paddingMin),

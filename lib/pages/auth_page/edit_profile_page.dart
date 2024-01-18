@@ -101,10 +101,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(paddingMin),
-                    child: Image.network(
-                      'https://getillustrations.b-cdn.net//photos/pack/3d-avatar-male_lg.png',
-                      fit: BoxFit.cover,
-                    ),
+                    child: currentUser.photoURL == null
+                        ? Image.network(
+                            'https://getillustrations.b-cdn.net//photos/pack/3d-avatar-male_lg.png',
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            currentUser.photoURL!.toString(),
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 SizedBox(height: 20),

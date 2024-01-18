@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_icons/line_icon.dart';
 
 import '../../config/config_color.dart';
 import '../../config/config_size.dart';
@@ -14,6 +15,13 @@ class ComponentsNutritions extends StatelessWidget {
   final String fat;
   final String protein;
   final String? text;
+  final Icon? iconCarbohydrates;
+  final Icon? iconFiber;
+  final Icon? iconWater;
+  final Icon? iconEnergy;
+  final Icon? iconFat;
+  final Icon? iconProtein;
+  final bool? isNote;
 
   const ComponentsNutritions({
     required this.carbohydrates,
@@ -24,6 +32,13 @@ class ComponentsNutritions extends StatelessWidget {
     required this.protein,
     this.text,
     super.key,
+    this.iconCarbohydrates,
+    this.iconFiber,
+    this.iconWater,
+    this.iconEnergy,
+    this.iconFat,
+    this.iconProtein,
+    this.isNote,
   });
 
   @override
@@ -53,7 +68,7 @@ class ComponentsNutritions extends StatelessWidget {
                   text!,
                   style: GoogleFonts.poppins(
                     color: Colors.white,
-                    fontSize: paddingMin,
+                    fontSize: paddingMin * 0.95,
                     fontWeight: FontWeight.bold,
                   ),
                 )
@@ -71,12 +86,20 @@ class ComponentsNutritions extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
-                      energy,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          energy,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: paddingMin * 0.75),
+                        iconEnergy ?? SizedBox.shrink(),
+                      ],
                     ),
                   ],
                 ),
@@ -99,12 +122,20 @@ class ComponentsNutritions extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
-                      carbohydrates,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          carbohydrates,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: paddingMin * 0.75),
+                        iconCarbohydrates ?? SizedBox.shrink(),
+                      ],
                     ),
                   ],
                 ),
@@ -127,12 +158,20 @@ class ComponentsNutritions extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
-                      protein,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          protein,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: paddingMin * 0.75),
+                        iconProtein ?? SizedBox.shrink(),
+                      ],
                     ),
                   ],
                 ),
@@ -152,12 +191,20 @@ class ComponentsNutritions extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
-                      fiber,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          fiber,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: paddingMin * 0.75),
+                        iconFiber ?? SizedBox.shrink(),
+                      ],
                     ),
                   ],
                 ),
@@ -180,12 +227,20 @@ class ComponentsNutritions extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
-                      water,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          water,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: paddingMin * 0.75),
+                        iconWater ?? SizedBox.shrink(),
+                      ],
                     ),
                   ],
                 ),
@@ -208,12 +263,20 @@ class ComponentsNutritions extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
-                      fat,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          fat,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: paddingMin * 0.75),
+                        iconFat ?? SizedBox.shrink(),
+                      ],
                     ),
                   ],
                 ),

@@ -50,12 +50,12 @@ class ComponentsSquareTile extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: paddingMin),
               Image.asset(
                 imagePath,
                 height: 20,
                 color: Colors.white,
               ),
+              SizedBox(width: paddingMin * 0.75),
             ],
           ),
         ),

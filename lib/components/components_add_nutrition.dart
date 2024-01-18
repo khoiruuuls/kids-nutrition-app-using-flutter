@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kids_nutrition_app/config/config_color.dart';
+import 'package:kids_nutrition_app/pages/details/kid_page.dart';
 import 'package:kids_nutrition_app/services/firestore.dart';
 
 import '../config/config_size.dart';
 import '../model/model_recepies.dart';
-import '../pages/role_kids/role_kids_page.dart';
 
 class ComponentsAddNutrition extends StatelessWidget {
   final String id;
@@ -36,6 +36,7 @@ class ComponentsAddNutrition extends StatelessWidget {
             recipe.protein,
             recipe.water,
             recipe.fiber,
+            recipe.totalSingleNutrition,
           );
           String nutritionId = nutritionReference.id;
           await firestoreService.addKidNutritionRelation(id, nutritionId);
@@ -43,7 +44,7 @@ class ComponentsAddNutrition extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RoleKidsPage(id: id),
+              builder: (context) => KidPage(id: id),
             ),
           );
         },

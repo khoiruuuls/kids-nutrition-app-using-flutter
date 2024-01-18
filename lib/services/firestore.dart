@@ -168,15 +168,15 @@ class FirestoreService {
   // create
 
   Future<DocumentReference> addNutrition(
-    String name,
-    String image,
-    double kalori,
-    double karbohidrat,
-    double lemak,
-    double protein,
-    double water,
-    double fiber,
-  ) {
+      String name,
+      String image,
+      double kalori,
+      double karbohidrat,
+      double lemak,
+      double protein,
+      double water,
+      double fiber,
+      double totalSingleNutrition) {
     return nutrition.add({
       'name': name,
       'image': image,
@@ -186,6 +186,7 @@ class FirestoreService {
       'protein': protein,
       'water': water,
       'fiber': fiber,
+      'total': totalSingleNutrition,
       'timestamp': Timestamp.now(),
     });
   }

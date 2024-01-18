@@ -69,6 +69,7 @@ class ChatPage extends StatelessWidget {
                                   as Map<String, dynamic>;
                               var uid = data['uid'];
                               var name = data['name'];
+                              var photo = data['photo'];
                               var email = data['email'];
                               var role = data['role'];
                               var timestamp = data["timestamp"];
@@ -83,13 +84,15 @@ class ChatPage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ChatRoomPage(
-                                          recieverUserID: uid,
+                                          senderUserId: currentUser.uid,
+                                          recieverUserId: uid,
                                           receiverUserEmail: email,
                                         ),
                                       ),
                                     );
                                   },
                                   id: uid,
+                                  photo: photo,
                                   role: role,
                                   date: formattedDate,
                                   time: formattedTime,

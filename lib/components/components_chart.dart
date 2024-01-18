@@ -13,6 +13,13 @@ class ComponentsChart extends StatelessWidget {
   final String dayFive;
   final String daySix;
   final String daySeven;
+  final String dateOne;
+  final String dateTwo;
+  final String dateThree;
+  final String dateFour;
+  final String dateFive;
+  final String dateSix;
+  final String dateSeven;
 
   const ComponentsChart({
     Key? key,
@@ -23,6 +30,13 @@ class ComponentsChart extends StatelessWidget {
     required this.dayFive,
     required this.daySix,
     required this.daySeven,
+    required this.dateOne,
+    required this.dateTwo,
+    required this.dateThree,
+    required this.dateFour,
+    required this.dateFive,
+    required this.dateSix,
+    required this.dateSeven,
   }) : super(key: key);
 
   @override
@@ -43,7 +57,7 @@ class ComponentsChart extends StatelessWidget {
       height: 200,
       child: BarChart(
         BarChartData(
-            maxY: 3000,
+            maxY: 11000,
             minY: 0,
             gridData: FlGridData(show: false),
             borderData: FlBorderData(show: false),
@@ -79,7 +93,7 @@ class ComponentsChart extends StatelessWidget {
                         color: ConfigColor.darkBlue,
                         width: 14,
                         backDrawRodData: BackgroundBarChartRodData(
-                          toY: 3000,
+                          toY: 11000,
                           show: true,
                           color: Colors.amber.shade300,
                         ),
@@ -101,50 +115,50 @@ class ComponentsChart extends StatelessWidget {
   Widget setBottomTitle(double value, TitleMeta meta) {
     var style = const TextStyle(
       color: ConfigColor.darkBlue,
-      fontWeight: FontWeight.bold,
+      fontSize: 12,
     );
 
     Widget text;
     switch (value.toInt()) {
       case 0:
         text = Text(
-          "1",
+          dateOne,
           style: style,
         );
         break;
       case 1:
         text = Text(
-          "2",
+          dateTwo,
           style: style,
         );
         break;
       case 2:
         text = Text(
-          "3",
+          dateThree,
           style: style,
         );
         break;
       case 3:
         text = Text(
-          "4",
+          dateFour,
           style: style,
         );
         break;
       case 4:
         text = Text(
-          "5",
+          dateFive,
           style: style,
         );
         break;
       case 5:
         text = Text(
-          "6",
+          dateSix,
           style: style,
         );
         break;
       case 6:
         text = Text(
-          "7",
+          dateSeven,
           style: style,
         );
         break;

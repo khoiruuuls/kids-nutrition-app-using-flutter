@@ -88,15 +88,22 @@ class _RecipePageState extends State<RecipePage> {
         var nutrients = recipe['totalNutrients'];
         recipes.add(
           Recipe(
-              image: recipe['image'],
-              label: recipe['label'],
-              energy: recipe['calories'],
-              ingredientLines: recipe['ingredientLines'],
-              protein: nutrients['PROCNT']['quantity'],
-              carbohydrates: nutrients['CHOCDF']['quantity'],
-              fat: nutrients['FAT']['quantity'],
-              water: nutrients['WATER']['quantity'],
-              fiber: nutrients['FIBTG']['quantity']),
+            image: recipe['image'],
+            label: recipe['label'],
+            energy: recipe['calories'],
+            ingredientLines: recipe['ingredientLines'],
+            protein: nutrients['PROCNT']['quantity'],
+            carbohydrates: nutrients['CHOCDF']['quantity'],
+            fat: nutrients['FAT']['quantity'],
+            water: nutrients['WATER']['quantity'],
+            fiber: nutrients['FIBTG']['quantity'],
+            totalSingleNutrition: recipe['calories'] +
+                nutrients['PROCNT']['quantity'] +
+                nutrients['CHOCDF']['quantity'] +
+                nutrients['FAT']['quantity'] +
+                nutrients['WATER']['quantity'] +
+                nutrients['FIBTG']['quantity'],
+          ),
         );
       }
 

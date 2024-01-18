@@ -8,6 +8,7 @@ class Recipe {
   final double fat;
   final double water;
   final double fiber;
+  final double totalSingleNutrition;
 
   Recipe({
     required this.image,
@@ -19,5 +20,6 @@ class Recipe {
     required this.fat,
     required this.water,
     required this.fiber,
+    required this.totalSingleNutrition,
   });
 }

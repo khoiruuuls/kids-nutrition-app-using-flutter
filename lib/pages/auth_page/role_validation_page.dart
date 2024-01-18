@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kids_nutrition_app/config/config_void.dart';
 import 'package:kids_nutrition_app/pages/auth_page/auth_page.dart';
+import 'package:kids_nutrition_app/pages/auth_page/role_selection_page.dart';
 import '../first_page.dart';
 import '../role_kids/role_kids_page.dart';
 
@@ -43,24 +44,7 @@ class RoleValidationPage extends StatelessWidget {
                 : FirstPage();
           }
 
-          return Center(
-            child: Row(
-              children: [
-                Text("Role data doesn't exist."),
-                GestureDetector(
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    navigateToPage(context, AuthPage());
-                  },
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    color: Colors.red,
-                  ),
-                )
-              ],
-            ),
-          );
+          return RoleSelectionPage();
         },
       ),
     );

@@ -58,12 +58,43 @@ class _KidHistoryState extends State<KidHistory> {
                     final nutritionData =
                         nutritionSnapshot.data!.data() as Map<String, dynamic>;
 
-                    // Now, you can access and display the nutrition data
-                    String nutritionName = nutritionData['name'] ?? '';
-                    String nutritionImage = nutritionData['image'] ?? '';
+                    String nutritionName = nutritionData['name'];
+                    String nutritionImage = nutritionData['image'];
+
                     var timestamp = nutritionData["timestamp"];
                     String formattedDate = DateFormat('hh : mm, dd MMMM yyyy')
                         .format(timestamp.toDate());
+
+                    bool isImageExpired(String imageUrl) {
+                      Uri uri = Uri.parse(imageUrl);
+
+                      // Check if the URL contains the necessary parameters
+                      if (uri.queryParameters.containsKey('X-Amz-Date') &&
+                          uri.queryParameters.containsKey('X-Amz-Expires')) {
+                        // Extract X-Amz-Date and X-Amz-Expires from the URL
+                        String? requestDateTime =
+                            uri.queryParameters['X-Amz-Date'];
+                        int? expirationTimestamp =
+                            int.tryParse(uri.queryParameters['X-Amz-Expires']!);
+
+                        if (requestDateTime != null &&
+                            expirationTimestamp != null) {
+                          // Parse X-Amz-Date and calculate expiration time
+                          DateTime requestTime =
+                              DateTime.parse(requestDateTime);
+                          DateTime expirationTime = requestTime
+                              .add(Duration(seconds: expirationTimestamp));
+                          // Get the current time
+                          DateTime currentTime = DateTime.now();
+
+                          // Return true if the expiration time is in the past (expired), false otherwise
+                          return expirationTime.isBefore(currentTime);
+                        }
+                      }
+
+                      // Return false if the necessary parameters are not present or if parsing fails
+                      return false;
+                    }
 
                     return GestureDetector(
                       onTap: () {
@@ -103,7 +134,9 @@ class _KidHistoryState extends State<KidHistory> {
                                         image: DecorationImage(
                                           fit: BoxFit.cover,
                                           image: NetworkImage(
-                                            nutritionImage,
+                                            isImageExpired(nutritionImage)
+                                                ? 'https://bit.ly/kids-nutrition-app-image-expired' // Default or placeholder image URL
+                                                : nutritionImage,
                                           ),
                                         ),
                                       ),
@@ -117,9 +150,11 @@ class _KidHistoryState extends State<KidHistory> {
                                                 borderRadius:
                                                     const BorderRadius.only(
                                                   bottomLeft: Radius.circular(
-                                                      kBorderRadius20),
+                                                    kBorderRadius20,
+                                                  ),
                                                   bottomRight: Radius.circular(
-                                                      kBorderRadius20),
+                                                    kBorderRadius20,
+                                                  ),
                                                 ),
                                                 gradient: kLinearGradientBlack,
                                               ),

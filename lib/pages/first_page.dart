@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:kids_nutrition_app/config/config_size.dart';
 import 'package:kids_nutrition_app/pages/chat_page/chat_page.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../config/config_color.dart';
-import 'kid_page/add_kid_page.dart';
+import 'test/test_message_notification.dart';
 import 'home_page/home_page.dart';
 import 'profile_page/profile_page.dart';
 
@@ -30,8 +29,8 @@ class _FirstPageState extends State<FirstPage> {
 
   List<dynamic> appPage = [
     HomePage(),
+    // TestMessageNotification(),
     ChatPage(),
-    // AddKidPage(),
     ProfilePage(),
   ];
 

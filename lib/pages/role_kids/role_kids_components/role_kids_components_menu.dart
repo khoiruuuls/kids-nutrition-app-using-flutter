@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:line_icons/line_icon.dart';
 
 import '../../../config/config_class.dart';
@@ -21,6 +23,42 @@ class KidsRoleComponentsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ConfigSize().init(context);
+
+    logoutField() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Apakah anda yakin ingin logout dari akun ini ?",
+              style: GoogleFonts.poppins(fontSize: 16),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Tidak",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  navigateToPage(context, AuthPage());
+                },
+                child: Text(
+                  "Ya",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Container(
       constraints: BoxConstraints(
         maxHeight: 48,
@@ -48,14 +86,7 @@ class KidsRoleComponentsMenu extends StatelessWidget {
           LineDevider(heightLine: 2, chooseColor: Colors.white),
           Expanded(
             child: MenuIconOnTap(
-              onTap: () async {
-                try {
-                  await FirebaseAuth.instance.signOut();
-                  navigateToPage(context, AuthPage());
-                } catch (e) {
-                  print('Sign-out error: $e');
-                }
-              },
+              onTap: logoutField,
               icon: LineIcon.alternateSignOut(color: Colors.white),
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kids_nutrition_app/model/model_age_counter.dart';
 import '../../config/config_size.dart';
 import 'package:kids_nutrition_app/services/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class KidHeading extends StatefulWidget {
   final String id;
@@ -22,6 +23,8 @@ class KidHeading extends StatefulWidget {
 class _KidHeadingState extends State<KidHeading> {
   FirestoreService firestoreService = FirestoreService();
   AgeCounter ageCounter = AgeCounter();
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -50,7 +53,9 @@ class _KidHeadingState extends State<KidHeading> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(paddingMin),
                       child: Image.network(
-                          'https://getillustrations.b-cdn.net//photos/pack/3d-avatar-male_lg.png'),
+                        data['photo'],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(width: paddingMin * 2),
@@ -91,7 +96,7 @@ class _KidHeadingState extends State<KidHeading> {
             ),
           );
         } else {
-          return Text('No data available');
+          return Text('');
         }
       },
     );

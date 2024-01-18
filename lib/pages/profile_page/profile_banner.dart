@@ -1,10 +1,10 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously, await_only_futures
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kids_nutrition_app/pages/auth_page/edit_profile_page.dart';
+import 'package:kids_nutrition_app/config/config_void.dart';
 import 'package:line_icons/line_icon.dart';
 
 import '../../config/config_color.dart';
@@ -16,6 +16,42 @@ class ProfileBanner extends StatelessWidget {
   final currentUser = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
+    logoutField() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Apakah anda yakin ingin log out ?",
+              style: GoogleFonts.poppins(fontSize: 16),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Tidak",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await FirebaseAuth.instance.signOut();
+                  navigateToPage(context, AuthPage());
+                },
+                child: Text(
+                  "Ya",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     print(currentUser);
     return StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -64,19 +100,8 @@ class ProfileBanner extends StatelessWidget {
                   ),
                   SizedBox(width: paddingMin),
                   GestureDetector(
-                    onTap: () async {
-                      try {
-                        await FirebaseAuth.instance.signOut();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AuthPage(),
-                          ),
-                        );
-                      } catch (e) {
-                        // Handle sign-out errors if necessary
-                        print('Sign-out error: $e');
-                      }
+                    onTap: () {
+                      logoutField();
                     },
                     child: Align(
                       alignment: Alignment.topCenter,

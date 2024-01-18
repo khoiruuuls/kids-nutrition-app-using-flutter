@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
 
                     return Column(
                       children: [
+                        SizedBox(height: paddingMin),
                         Expanded(
                           child: ListView.builder(
                             physics: BouncingScrollPhysics(),
@@ -89,6 +90,7 @@ class _HomePageState extends State<HomePage> {
                               var uid = data['uid'];
                               var name = data['name'];
                               var role = data['role'];
+                              var photo = data['photo'];
                               var timestamp = data["timestamp"];
                               String formattedDate = DateFormat('dd MMMM yyyy')
                                   .format(timestamp.toDate());
@@ -107,6 +109,7 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   id: uid,
                                   role: role,
+                                  photo: photo,
                                   date: formattedDate,
                                   time: formattedTime,
                                   name: name,

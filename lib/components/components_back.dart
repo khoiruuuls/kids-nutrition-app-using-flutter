@@ -10,8 +10,10 @@ import 'components_menu.dart';
 class ComponentsBack extends StatelessWidget {
   final String textTitle;
   final String? id;
+  final Function? onTap;
   const ComponentsBack({
     required this.textTitle,
+    this.onTap,
     this.id,
     super.key,
   });
@@ -23,9 +25,7 @@ class ComponentsBack extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: onTap as void Function()? ?? () => Navigator.pop(context),
             child: Align(
               alignment: Alignment.topCenter,
               child: Row(

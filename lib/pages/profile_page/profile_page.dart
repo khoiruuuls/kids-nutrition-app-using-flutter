@@ -1,17 +1,99 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, avoid_print, prefer_interpolation_to_compose_strings, prefer_is_empty
 
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../components/components_text_box.dart';
+import 'package:kids_nutrition_app/components/components_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../config/config_color.dart';
 import '../../config/config_size.dart';
 import 'profile_banner.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  Future uploadPhoto() async {
+    final path = "${currentUser.uid}.jpg";
+    final file = File(pickedFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    final link =
+        "https://firebasestorage.googleapis.com/v0/b/kids-nutrition-app.appspot.com/o/${currentUser.uid}.jpg?alt=media&token=814963ac-79a7-46b9-b411-a2f9578d080f";
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .update({
+      'photo': link,
+    });
+  }
+
+  Future selectPhoto() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png'],
+    );
+
+    if (result == null) return;
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Widget buildProgress() => StreamBuilder(
+        stream: uploadTask?.snapshotEvents,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final data = snapshot.data!;
+            double progress = data.bytesTransferred / data.totalBytes;
+
+            return Column(
+              children: [
+                LinearProgressIndicator(
+                  value: progress,
+                  minHeight: paddingMin * 0.5,
+                  backgroundColor: Colors.white,
+                  color: ConfigColor.darkBlue,
+                  borderRadius: BorderRadius.circular(paddingMin),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "${(100 * progress).roundToDouble()} %",
+                    style: GoogleFonts.poppins(
+                      fontSize: 10,
+                    ),
+                  ),
+                )
+              ],
+            );
+          } else {
+            return const SizedBox(
+              height: paddingMin,
+            );
+          }
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -157,13 +239,34 @@ class ProfilePage extends StatelessWidget {
                                 ]),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(paddingMin),
-                              child: Image.network(
-                                'https://getillustrations.b-cdn.net//photos/pack/3d-avatar-male_lg.png',
-                                fit: BoxFit.cover,
-                              ),
+                              child: pickedFile == null
+                                  ? Image.network(
+                                      userData['photo'],
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(pickedFile!.path!),
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
-                          SizedBox(height: paddingMin * 2),
+                          SizedBox(height: paddingMin),
+                          buildProgress(),
+                          SizedBox(height: paddingMin),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ComponentsButton(
+                                onTap: selectPhoto,
+                                text: "Select",
+                              ),
+                              ComponentsButton(
+                                onTap: uploadPhoto,
+                                text: "Upload",
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: paddingMin),
                           ComponentsTextBox(
                             sectionName: "Name",
                             text: userData['name'],
@@ -181,6 +284,7 @@ class ProfilePage extends StatelessWidget {
                             text: userData['bio'],
                             onPressed: () => editField("bio"),
                           ),
+                          SizedBox(height: paddingMin * 2),
                         ],
                       ),
                     );
@@ -192,7 +296,7 @@ class ProfilePage extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: paddingMin * 2),
+            SizedBox(height: paddingMin * 5),
           ],
         ),
       ),

@@ -13,9 +13,11 @@ class ListKidsNew extends StatelessWidget {
   final String time;
   final bool isShow;
   final Function()? onTap;
+  final String? photo;
   const ListKidsNew({
-    this.isShow = false, // Set the default value to false
+    this.isShow = false,
     this.role,
+    this.photo,
     required this.time,
     required this.date,
     required this.onTap,
@@ -30,19 +32,19 @@ class ListKidsNew extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 100,
+        height: 80,
         margin: EdgeInsets.only(
           bottom: ConfigSize.blockSizeVertical! * 0.5,
         ),
         child: Row(
           children: [
             Container(
-              height: 80,
-              width: 80,
-              padding: EdgeInsets.all(5),
+              height: 70,
+              width: 70,
+              padding: EdgeInsets.all(paddingMin * 0.1),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(paddingMin),
+                color: const Color.fromRGBO(255, 255, 255, 1),
+                borderRadius: BorderRadius.circular(paddingMin * 0.8),
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 24,
@@ -53,9 +55,9 @@ class ListKidsNew extends StatelessWidget {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(paddingMin),
+                borderRadius: BorderRadius.circular(paddingMin * 0.8),
                 child: Image.network(
-                  "https://getillustrations.b-cdn.net//photos/pack/3d-avatar-male_lg.png",
+                  photo ?? "",
                   fit: BoxFit.cover,
                 ),
               ),

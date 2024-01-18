@@ -37,6 +37,12 @@ class RecipeService {
               fat: nutrients['FAT']['quantity'],
               water: nutrients['WATER']['quantity'],
               fiber: nutrients['FIBTG']['quantity'],
+              totalSingleNutrition: recipe['calories'] +
+                  nutrients['PROCNT']['quantity'] +
+                  nutrients['CHOCDF']['quantity'] +
+                  nutrients['FAT']['quantity'] +
+                  nutrients['WATER']['quantity'] +
+                  nutrients['FIBTG']['quantity'],
             ),
           );
         }

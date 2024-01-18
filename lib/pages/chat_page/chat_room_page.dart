@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:kids_nutrition_app/components/components_back.dart';
 import 'package:kids_nutrition_app/components/components_chat_bubble.dart';
 import 'package:kids_nutrition_app/components/components_input.dart';
 import 'package:kids_nutrition_app/config/config_color.dart';
+import 'package:http/http.dart' as http;
 import 'package:kids_nutrition_app/services/chat_services.dart';
 import 'package:line_icons/line_icon.dart';
 
@@ -15,11 +18,13 @@ import '../../config/config_size.dart';
 
 class ChatRoomPage extends StatefulWidget {
   final String receiverUserEmail;
-  final String recieverUserID;
+  final String recieverUserId;
+  final String senderUserId;
 
   const ChatRoomPage({
     required this.receiverUserEmail,
-    required this.recieverUserID,
+    required this.recieverUserId,
+    required this.senderUserId,
     super.key,
   });
 
@@ -36,14 +41,63 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void sendMessage() async {
     if (messageController.text.isNotEmpty) {
       await chatService.sendMessage(
-        widget.recieverUserID,
+        widget.recieverUserId,
         messageController.text,
         Timestamp.now(),
       );
       messageController.clear();
 
-      await chatService.updateTimestamp(widget.recieverUserID, Timestamp.now());
+      await chatService.updateTimestamp(
+        widget.senderUserId,
+        widget.recieverUserId,
+        Timestamp.now(),
+      );
+
+      DocumentSnapshot snapSender = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.senderUserId)
+          .get();
+      DocumentSnapshot snapReceiver = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.recieverUserId)
+          .get();
+
+      String token = snapReceiver['token'];
+      String name = snapSender['name'];
+      String role = snapSender['role'];
+
+      sendPushMessage(token, name, role);
     }
+  }
+
+  void sendPushMessage(String token, String name, String role) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'key=AAAAZ1xh454:APA91bECdNFweqMTSLppruJXg_TyUGIAcIfMjgDU72UhcD2Zdjp7wij6mqscZiVwtQahHwovMV_Axv6qhzTt-wB73JNCzAS5xKC1M_m2ZJ0NXlLQ8j7tIK5NySxatsK4As1NJHoXhLCG',
+        },
+        body: jsonEncode(
+          {
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'status': 'done',
+              'body': 'Pesan masuk dari $name - $role',
+              'title': "Kids Nutrition App",
+            },
+            'notification': <String, dynamic>{
+              'android_channel_id': 'kids-nutritions-app-channel-id',
+              'body': 'Pesan masuk dari $name - $role',
+              'title': "Kids Nutrition App",
+            },
+            'to': token,
+          },
+        ),
+      );
+    } catch (e) {}
   }
 
   @override
@@ -66,7 +120,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   Widget buildMesssageList() {
     return StreamBuilder(
       stream:
-          chatService.getMessages(widget.recieverUserID, auth.currentUser!.uid),
+          chatService.getMessages(widget.recieverUserId, auth.currentUser!.uid),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -108,23 +162,41 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: paddingMin,
-          vertical: paddingMin / 2,
+          vertical: paddingMin * 0.5,
         ),
         child: Column(
           crossAxisAlignment: (data['senderId'] == auth.currentUser!.uid)
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.end,
           children: [
             SizedBox(height: paddingMin * 0.2),
             ComponentsChatBubble(
-                message: data["message"],
-                colorContainer: (data['senderId'] == auth.currentUser!.uid)
-                    ? ConfigColor.chatSend
-                    : ConfigColor.chatReceive,
-                colorText: (data['senderId'] == auth.currentUser!.uid)
-                    ? ConfigColor.chatReceive
-                    : ConfigColor.chatSend,
-                date: formattedDate),
+              crossAlignment: (data['senderId'] == auth.currentUser!.uid)
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              message: data["message"],
+              colorContainer: (data['senderId'] == auth.currentUser!.uid)
+                  ? ConfigColor.chatSend
+                  : ConfigColor.chatReceive,
+              colorText: (data['senderId'] == auth.currentUser!.uid)
+                  ? ConfigColor.chatReceive
+                  : ConfigColor.chatSend,
+              date: formattedDate,
+              colorDate: (data['senderId'] == auth.currentUser!.uid)
+                  ? ConfigColor.chatReceive
+                  : ConfigColor.chatSend,
+              borderRadiusGeometry: (data['senderId'] == auth.currentUser!.uid)
+                  ? const BorderRadius.only(
+                      topLeft: Radius.circular(paddingMin),
+                      bottomLeft: Radius.circular(paddingMin),
+                      bottomRight: Radius.circular(paddingMin),
+                    )
+                  : const BorderRadius.only(
+                      topLeft: Radius.circular(paddingMin),
+                      topRight: Radius.circular(paddingMin),
+                      bottomRight: Radius.circular(paddingMin),
+                    ),
+            ),
           ],
         ),
       ),

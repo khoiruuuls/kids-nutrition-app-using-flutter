@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, unused_element
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +9,7 @@ import 'package:kids_nutrition_app/components/components/components/input_kids.d
 import 'package:kids_nutrition_app/components/components_category_role.dart';
 import 'package:kids_nutrition_app/config/config_color.dart';
 import 'package:kids_nutrition_app/config/config_size.dart';
+import 'package:kids_nutrition_app/pages/auth_page/email_verify_page.dart';
 import 'package:kids_nutrition_app/pages/auth_page/role_validation_page.dart';
 import '../../components/components_button.dart';
 import '../../components/components_modal_bottom.dart';
@@ -34,27 +35,10 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
 
-    void showErrorMessage(String message) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.deepPurple,
-            title: Center(
-              child: Text(
-                message,
-                style: GoogleFonts.poppins(color: Colors.white),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
     void signUserUp() async {
       showDialog(
         context: context,
-        builder: (context) {
+        builder: (BuildContext context) {
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -79,6 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
             'gender': componentsListHelper.gender[selectedGenderIndex],
             'weight': 0.0,
             'height': 0.0,
+            'photo': 'https://bit.ly/kids-nutrition-app-pp',
             'bio': "No data record .",
             'phone': "No data record .",
             'nik': "No data record .",
@@ -91,7 +76,8 @@ class _SignUpPageState extends State<SignUpPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RoleValidationPage(id: auth.currentUser!.uid),
+            // builder: (context) => RoleValidationPage(id: auth.currentUser!.uid),
+            builder: (context) => EmailVerifyPage(id: auth.currentUser!.uid),
           ),
         );
       } on FirebaseAuthException catch (e) {

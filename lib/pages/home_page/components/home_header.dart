@@ -30,7 +30,9 @@ class _HomeHeaderState extends State<HomeHeader> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: paddingMin * 2, vertical: paddingMin),
+                  horizontal: paddingMin * 2,
+                  vertical: paddingMin,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,12 +54,27 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ),
                       ],
                     ),
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.grey,
-                      backgroundImage: NetworkImage(
-                        "https://getillustrations.b-cdn.net//photos/pack/3d-avatar-male_lg.png",
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 24,
+                            spreadRadius: 0,
+                            offset: Offset(0, 3),
+                            color: Colors.grey.shade200,
+                          )
+                        ],
                       ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.network(
+                            data['photo'],
+                            fit: BoxFit.cover,
+                          )),
                     ),
                   ],
                 ),
